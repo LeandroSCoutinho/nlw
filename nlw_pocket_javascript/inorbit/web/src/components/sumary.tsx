@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getSummary } from '../http/get-summary'
 import dayjs from 'dayjs'
 import ptBR from 'dayjs/locale/pt-BR'
+import { PenddingGoals } from './pending-goals'
 
 dayjs.locale(ptBR)
 
@@ -30,7 +31,6 @@ export function Summary() {
   return (
     
     <div className="py-10 max-w-[480px] px-5 mx-auto flex flex-col gap-6">
-      {JSON.stringify(data)}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <InOrbitIcon />
@@ -61,27 +61,7 @@ export function Summary() {
 
       <Separator />
 
-      <div className="flex flex-wrap gap-3">
-        <OutlineButton>
-          <Plus className="size-4 text-zinc-600" />
-          Meditar
-        </OutlineButton>
-
-        <OutlineButton>
-          <Plus className="size-4 text-zinc-600" />
-          Nadar
-        </OutlineButton>
-
-        <OutlineButton>
-          <Plus className="size-4 text-zinc-600" />
-          Praticar exercício
-        </OutlineButton>
-
-        <OutlineButton>
-          <Plus className="size-4 text-zinc-600" />
-          Me alimentar bem
-        </OutlineButton>
-      </div>
+     <PenddingGoals/>
 
       <div className="flex flex-col gap-6">
         <h2 className="text-xl font-medium">Sua semana</h2>
