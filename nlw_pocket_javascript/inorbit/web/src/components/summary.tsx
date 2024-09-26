@@ -4,7 +4,6 @@ import { DialogTrigger } from './ui/dialog'
 import { InOrbitIcon } from './in-orbit-icon'
 import { Progress, ProgressIndicator } from './ui/progress-bar'
 import { Separator } from './ui/separator'
-import { OutlineButton } from './ui/outline-button'
 import { useQuery } from '@tanstack/react-query'
 import { getSummary } from '../http/get-summary'
 import dayjs from 'dayjs'
@@ -20,13 +19,16 @@ export function Summary() {
     staleTime: 1000 * 60, // 60 seconds
   })
 
-  if (!data) {
-    return null
+  if (!data || !data.total || !data.completed) {
+    return null;
   }
+  
   const firstDayOfWeek = dayjs().startOf('week').format('D MMM')
   const lastDayOfWeek = dayjs().endOf('week').format('D MMM')
 
-  const completedPercentage = Math.round(data.completed * 100 / data.total)
+  const completedPercentage = data.total > 0
+  ? Math.round(data.completed * 100 / data.total)
+  : 0;
 
   return (
     
@@ -55,7 +57,8 @@ export function Summary() {
             Você completou <span className="text-zinc-100">{data?.completed}</span> de{' '}
             <span className="text-zinc-100">{data?.total}</span> metas nessa semana.
           </span>
-          <span>{completedPercentage},%</span>
+          <span>{completedPercentage}%</span>
+
         </div>
       </div>
 
@@ -66,7 +69,7 @@ export function Summary() {
       <div className="flex flex-col gap-6">
         <h2 className="text-xl font-medium">Sua semana</h2>
 
-       {Object.entries(data.goalsPerDay).map(([date, goals])=>{
+        {data.goalsPerDay && Object.entries(data.goalsPerDay).map(([date, goals]) => {
          const weekDay =  dayjs(date).format('ddd')
          const formattedDate =  dayjs(date).format('D[ de ]MMMM')
         return (
@@ -77,7 +80,7 @@ export function Summary() {
             </h3>
 
             <ul className="flex flex-col gap-3">
-              {goals.map(goal => {
+            {goals?.map(goal => {
                 const time = dayjs(goal.completedAt).format('HH:mm')
                 return (
                   <li key={goal.id} className="flex items-center gap-2">
